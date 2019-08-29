@@ -1,7 +1,6 @@
 [PROCESS_TABLE + ( [SYSTEM_STATUS_TABLE + 1] * 16) + 9]=10;
 [PROCESS_TABLE + ( [SYSTEM_STATUS_TABLE + 1] * 16) + 4]=TERMINATED;
 alias process_table_entry R1;
-breakpoint;
 process_table_entry=PROCESS_TABLE +16;
 while(process_table_entry<(PROCESS_TABLE +16*16) && [process_table_entry+4]==TERMINATED)do
     process_table_entry=process_table_entry+16;
