@@ -1,16 +1,14 @@
-int main(){
-    decl 
-        int i,sum;   
-    enddecl
-    begin
-        i=1;
-        sum=0;
-        while(i<11)do
-            sum=sum+i;
-            i=i+1;
-        endwhile;
-        breakpoint;
-        i=exposcall("Write",-2,sum);
-        return 0;
-    end
+int main()
+{
+decl
+    int temp,num;
+enddecl
+begin
+    num=101;
+    while ( num <= 200 ) do
+         temp = exposcall ( "Write" , -2, num );
+         num = num + 1;
+    endwhile;
+    return 0;
+end
 }
