@@ -2,7 +2,8 @@ loadi(63,13);   //Library
 loadi(64,14);
 loadi(65,7);    //INIT
 loadi(66,8);
-loadi(85,69);   //User Program
+loadi(85,69);   //User Program 1
+loadi(91,70);   //User Program 2
 loadi(22,35);   //Exit
 loadi(23,36);
 loadi(2, 15);   //Exception
@@ -77,4 +78,33 @@ pte = PAGE_TABLE_BASE+40;
 [PROCESS_TABLE +16*2+ 14] = PAGE_TABLE_BASE+40;
 [PROCESS_TABLE +16*2+ 15] = 10;
 [86*512] = [85*512+1];
+pte = PAGE_TABLE_BASE+60;
+[pte+0] = 63;    //Library
+[pte+1] = "0100";
+[pte+2] = 64;
+[pte+3] = "0100";
+[pte+4] = 89;    //Heap
+[pte+5] = "0110";
+[pte+6] = 90;
+[pte+7] = "0110";
+[pte+8] = 91;    //Code
+[pte+9] = "0100";
+[pte+10] = -1;
+[pte+11] = "0000";
+[pte+12] = -1;
+[pte+13] = "0000";
+[pte+14] = -1;
+[pte+15] = "0000";
+[pte+16] = 92;   //Stack
+[pte+17] = "0110";
+[pte+18] = 93;
+[pte+19] = "0110";
+[PROCESS_TABLE +16*3+ 11] = 94;
+[PROCESS_TABLE +16*3+ 1] = 3;
+[PROCESS_TABLE +16*3+ 4] = CREATED;
+[PROCESS_TABLE +16*3+ 13] = 8*512;
+[PROCESS_TABLE +16*3+ 12] = 0;
+[PROCESS_TABLE +16*3+ 14] = PAGE_TABLE_BASE+60;
+[PROCESS_TABLE +16*3+ 15] = 10;
+[92*512] = [91*512+1];
 return;
