@@ -1,0 +1,36 @@
+alias currPID R0;
+currPID=[SYSTEM_STATUS_TABLE+1];
+multipush(BP);
+alias process_table_entry R1;
+process_table_entry = PROCESS_TABLE + currPID * 16;
+[process_table_entry + 12] = SP % 512;
+[process_table_entry + 14] = PTBR;
+[process_table_entry + 15] = PTLR;
+process_table_entry=process_table_entry+16;
+alias newPID R2;
+newPID=0;
+//Round Robin Scheduling
+while(process_table_entry<(PROCESS_TABLE +16*16))do
+    if([process_table_entry+4]==CREATED || [process_table_entry+4]==READY)then
+        newPID=[process_table_entry+1];
+        break;
+    endif;
+    process_table_entry=process_table_entry+16;
+endwhile;
+alias new_process_table R3;
+new_process_table = PROCESS_TABLE + newPID * 16;
+//Set back Kernel SP, PTBR , PTLR
+PTBR = [new_process_table + 14];
+PTLR = [new_process_table + 15];
+[SYSTEM_STATUS_TABLE + 1] = newPID;
+if([new_process_table + 4] == CREATED) then
+	[new_process_table + 4] = RUNNING;
+	SP = [new_process_table + 13];
+    [new_process_table + 9]=0;
+	breakpoint;
+    ireturn;
+endif;
+SP =  [new_process_table + 11] * 512 + [new_process_table + 12] ;
+[new_process_table + 4] = RUNNING;
+multipop(BP);
+return;

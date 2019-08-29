@@ -1,0 +1,16 @@
+int main(){
+    decl 
+        int i,sum;   
+    enddecl
+    begin
+        i=1;
+        sum=0;
+        while(i<11)do
+            sum=sum+i;
+            i=i+1;
+        endwhile;
+        breakpoint;
+        i=exposcall("Write",-2,sum);
+        return 0;
+    end
+}
