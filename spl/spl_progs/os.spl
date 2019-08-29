@@ -3,7 +3,6 @@ loadi(55, 68);
 loadi(69,11);   //Idle
 loadi(70,12);
 SP = 82*512-1;
-breakpoint;
 call BOOT_MODULE;
 PTBR=PAGE_TABLE_BASE;  //PID is 0-idle
 PTLR=10;
