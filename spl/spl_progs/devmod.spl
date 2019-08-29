@@ -1,7 +1,7 @@
-alias functionNum R1;
-alias currentPID R2;
-alias word R3;
-if(functionNum==3)then
+alias fcode R1;
+alias currPID R2;
+if(fcode==3)then        //Terminal Write
+    alias word R3;
     multipush(R1,R2,R3);
     R1=8;
     call RESOURCE_MANAGER;
@@ -10,7 +10,21 @@ if(functionNum==3)then
     multipush(R1,R2,R3);
     R1=9;
     call RESOURCE_MANAGER;
-    R4=R0;
     multipop(R1,R2,R3);
+else if(fcode==4)then   //Terminal Read
+    alias addr R3;
+    multipush(R1,R2,R3);
+    R1=8;
+    call RESOURCE_MANAGER;
+    multipop(R1,R2,R3);
+    read;
+    [PROCESS_TABLE + [SYSTEM_STATUS_TABLE+1] * 16 + 4] = WAIT_TERMINAL;
+    multipush(R1,R2,R3);
+    call SCHEDULER;
+    multipop(R1,R2,R3);
+    alias pAdd R4;
+    pAdd=[PTBR + 2 * (addr)/ 512] * 512 + (addr) % 512;
+    [pAdd]=[PROCESS_TABLE + [SYSTEM_STATUS_TABLE+1] * 16 + 8];
+endif;
 endif;
 return;

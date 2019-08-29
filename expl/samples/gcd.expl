@@ -1,0 +1,18 @@
+int main()
+{
+  decl
+    int r1,qi,r0,ri;
+  enddecl
+  begin
+    read(r0);
+    read(r1);
+    while(r1 != 0) do
+      qi = r0/r1;
+      ri = r0 - (qi*r1);
+      r0 = r1;
+      r1 = ri;
+    endwhile;
+    write(r0);
+    return 0;
+  end
+}

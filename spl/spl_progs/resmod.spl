@@ -1,31 +1,30 @@
-alias functionNum R1;
-alias currentPID R2;
-alias pid R3;
-if(functionNum==8)then
-    while([TERMINAL_STATUS_TABLE]==1)do
-        [PROCESS_TABLE+pid*16+4]=WAIT_TERMINAL;
-        multipush(R1,R2,R3);
+alias fcode R1;
+alias currPID R2;
+if(fcode==8)then        //Acquire Terminal
+    if([TERMINAL_STATUS_TABLE]==1)then
+        [PROCESS_TABLE + [SYSTEM_STATUS_TABLE+1] * 16 + 4] = WAIT_TERMINAL;
+        multipush(R1,R2);
         call SCHEDULER;
-        multipop(R1,R2,R3);
-    endwhile;
-    [TERMINAL_STATUS_TABLE]=1;
-    [TERMINAL_STATUS_TABLE+1]=pid;
-else if(functionNum==9)then
-        if([TERMINAL_STATUS_TABLE+1]!=pid)then
-            R0=-1;
-            return;
-        endif;
-        [TERMINAL_STATUS_TABLE]=0;
-        alias pte R4;
-        pte=PROCESS_TABLE;
-        while(pte<(PROCESS_TABLE +16*16))do
-            if([pte+4]==WAIT_TERMINAL && [pte+1]!=-1)then
-                [pte+4]=READY;
-            endif;
-            pte=pte+16;
-        endwhile;
-        R0=0;
+        multipop(R1,R2);
     endif;
+    [TERMINAL_STATUS_TABLE]=1;
+    [TERMINAL_STATUS_TABLE+1]=currPID;
+else if(fcode==9)then   //Release Terminal
+    if(currPID!=[TERMINAL_STATUS_TABLE+1])then
+        R0=-1;
+        return;
+    endif;
+    [TERMINAL_STATUS_TABLE]=0;
+    alias pte R3;
+    pte=PROCESS_TABLE;
+    while(pte<(PROCESS_TABLE +16*15+1))do
+        if([pte+4]==WAIT_TERMINAL && [pte+1]!=-1)then
+            [pte+4]=READY;
+        endif;
+        pte=pte+16;
+    endwhile;
+    R0=0;
+endif;
 endif;
 breakpoint;
 return;

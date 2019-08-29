@@ -1,0 +1,26 @@
+[PROCESS_TABLE + ( [SYSTEM_STATUS_TABLE + 1] * 16) + 9]=7;
+alias userSP R0;
+userSP=SP;
+[PROCESS_TABLE + ( [SYSTEM_STATUS_TABLE + 1] * 16) + 13]=SP;
+SP=[PROCESS_TABLE + ( [SYSTEM_STATUS_TABLE + 1] * 16) + 11]*512-1;
+alias arg1 R1;
+alias arg2 R2;
+alias retPhAdd R3;
+arg1=[[PTBR + 2 * (userSP - 4)/ 512] * 512 + (userSP - 4) % 512];
+if(arg1!=-1)then
+    retPhAdd = ([PTBR + 2 * ((userSP - 1)/ 512)] * 512) + (userSP - 1) % 512;
+    [retPhAdd]=-1;
+else
+    arg2=[[PTBR + 2 * (userSP - 3)/ 512] * 512 + (userSP - 3) % 512];
+    multipush(R0,R1,R2);
+    R1=4;
+    R3=arg2;
+    R2=[SYSTEM_STATUS_TABLE + 1];
+    call DEVICE_MANAGER;
+    multipop(R0,R1,R2);
+    retPhAdd = ([PTBR + 2 * ((userSP - 1)/ 512)] * 512) + (userSP - 1) % 512;
+    [retPhAdd]=0;
+endif;
+SP=userSP;
+[PROCESS_TABLE + ( [SYSTEM_STATUS_TABLE + 1] * 16) + 9]=0;
+ireturn;
