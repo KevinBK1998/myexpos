@@ -1,4 +1,4 @@
-load --init $HOME/myexpos/expl/samples/gcd.xsm
+load --init $HOME/myexpos/expl/samples/bubble.xsm
 load --os $HOME/myexpos/spl/spl_progs/os.xsm
 load --int=timer $HOME/myexpos/spl/spl_progs/timerint.xsm
 load --int=console $HOME/myexpos/spl/spl_progs/consoleint.xsm
