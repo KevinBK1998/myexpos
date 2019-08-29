@@ -1,4 +1,4 @@
-load --init $HOME/myexpos/expl/samples/num.xsm
+load --init $HOME/myexpos/expl/samples/odd.xsm
 load --idle $HOME/myexpos/expl/samples/idle.xsm
 load  --os $HOME/myexpos/spl/spl_progs/os.xsm
 load --library $HOME/myexpos/expl/library.lib
