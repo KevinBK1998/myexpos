@@ -16,6 +16,7 @@ if(fcode==1)then
     endwhile;
     [MEMORY_FREE_LIST+temp]=1;
     R0=temp;
+    breakpoint;
 else if(fcode==2)then
     alias page R2;
     [MEMORY_FREE_LIST+page]=[MEMORY_FREE_LIST+page]-1;
@@ -30,6 +31,7 @@ else if(fcode==2)then
         endif;
         pte=pte+16;
     endwhile;
+    breakpoint;
 endif;
 endif;
 return;
