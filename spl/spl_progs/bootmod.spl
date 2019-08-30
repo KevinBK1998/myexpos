@@ -4,22 +4,30 @@ loadi(65,7);    //INIT
 loadi(66,8);
 loadi(22,35);   //Exit
 loadi(23,36);
-loadi(2, 15);   //Exception
-loadi(3, 16);
-loadi(4, 17);   //Timer
-loadi(5, 18);
-loadi(8, 21);   //Console
-loadi(9, 22);
-loadi(16, 29);  //Write
-loadi(17, 30);
-loadi(14, 27);  //Read
-loadi(15, 28);
+loadi(59,3);    //Inode
+loadi(60,4);
+loadi(20,33);   //Execute
+loadi(21,34);
+loadi(2,15);    //Exception
+loadi(3,16);
+loadi(4,17);    //Timer
+loadi(5,18);
+loadi(8,21);    //Console
+loadi(9,22);
+loadi(16,29);   //Write
+loadi(17,30);
+loadi(14,27);   //Read
+loadi(15,28);
 loadi(50,63);   //Schedule
 loadi(51,64);
 loadi(40,53);   //Resource
 loadi(41,54);
 loadi(48,61);   //Device
 loadi(49,62);
+loadi(42,55);   //Process
+loadi(43,56);
+loadi(44,57);   //Memory
+loadi(45,58);
 [TERMINAL_STATUS_TABLE]=0;
 alias pte R0;
 pte=PROCESS_TABLE+ 4;
@@ -56,4 +64,25 @@ pte = PAGE_TABLE_BASE+20;
 [PROCESS_TABLE +16+ 14] = PAGE_TABLE_BASE+20;
 [PROCESS_TABLE +16+ 15] = 10;
 [76*512] = [65*512+1];
+alias i R0;
+i=MEMORY_FREE_LIST;
+while(i<MEMORY_FREE_LIST+83)do
+    [i]=1;
+    i=i+1;
+endwhile;
+while(i<MEMORY_FREE_LIST+128)do
+    [i]=0;
+    i=i+1;
+endwhile;
+i=MEMORY_FREE_LIST;
+alias freeno R1;
+freeno=0;
+while(i<MEMORY_FREE_LIST+128)do
+    if([i]==0)then
+        freeno=freeno+1;
+    endif;
+    i=i+1;
+endwhile;
+[SYSTEM_STATUS_TABLE+2]=freeno;
+[SYSTEM_STATUS_TABLE+3]=0;
 return;

@@ -1,0 +1,35 @@
+alias fcode R1;
+if(fcode==1)then
+    [SYSTEM_STATUS_TABLE+3]=[SYSTEM_STATUS_TABLE+3]+1;
+    while([SYSTEM_STATUS_TABLE+2]==0)do
+        [PROCESS_TABLE + [SYSTEM_STATUS_TABLE+1] * 16 + 4] = WAIT_MEM;
+        multipush(R1);
+        call SCHEDULER;
+        multipop(R1);
+    endwhile;
+    [SYSTEM_STATUS_TABLE+3]=[SYSTEM_STATUS_TABLE+3]-1;
+    [SYSTEM_STATUS_TABLE+2]=[SYSTEM_STATUS_TABLE+2]-1;
+    alias temp R2;
+    temp=0;
+    while([MEMORY_FREE_LIST+temp]>0)do
+        temp=temp+1;
+    endwhile;
+    [MEMORY_FREE_LIST+temp]=1;
+    R0=temp;
+else if(fcode==2)then
+    alias page R2;
+    [MEMORY_FREE_LIST+page]=[MEMORY_FREE_LIST+page]-1;
+    if([MEMORY_FREE_LIST+page]==0)then
+        [SYSTEM_STATUS_TABLE+2]=[SYSTEM_STATUS_TABLE+2]+1;
+    endif;
+    alias pte R3;
+    pte=PROCESS_TABLE;
+    while(pte<=(PROCESS_TABLE +16*16))do
+        if([pte+4]==WAIT_MEM && [pte+1]!=-1)then
+            [pte+4]=READY;
+        endif;
+        pte=pte+16;
+    endwhile;
+endif;
+endif;
+return;
