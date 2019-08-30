@@ -79,6 +79,5 @@ JMP _L6
 _L5:
 _L6:
 _L2:
-BRKP
 RET
 HALT

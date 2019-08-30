@@ -26,5 +26,4 @@ else if(fcode==9)then   //Release Terminal
     R0=0;
 endif;
 endif;
-breakpoint;
 return;

@@ -68,7 +68,7 @@ while(temp<INODE_TABLE+60*16)do
         [pgb+19] = "0110";
         //Code
         alias Max R8;
-        Max=[ind+2]/512;
+        Max=[temp+2]/512+1;
         alias i R9;
         i=0;
         while(i<Max)do
@@ -80,11 +80,6 @@ while(temp<INODE_TABLE+60*16)do
             [pgb+8+i] = R10;
             [pgb+9+i] = "0100";
             i=i+1;
-        endwhile;
-        i=pgb+8+i;
-        while(i<pgb+16)do
-            [i]=-1;
-            [i+1]="0000";
         endwhile;
         i=0;
         while(i<Max)do
