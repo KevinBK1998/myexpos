@@ -1,5 +1,5 @@
 alias fcode R1;
-if(fcode==1)then
+if(fcode==1)then        //Get Free Page
     [SYSTEM_STATUS_TABLE+3]=[SYSTEM_STATUS_TABLE+3]+1;
     while([SYSTEM_STATUS_TABLE+2]==0)do
         [PROCESS_TABLE + [SYSTEM_STATUS_TABLE+1] * 16 + 4] = WAIT_MEM;
@@ -17,7 +17,7 @@ if(fcode==1)then
     [MEMORY_FREE_LIST+temp]=1;
     R0=temp;
     breakpoint;
-else if(fcode==2)then
+else if(fcode==2)then   //Release Page
     alias page R2;
     [MEMORY_FREE_LIST+page]=[MEMORY_FREE_LIST+page]-1;
     if([MEMORY_FREE_LIST+page]==0)then
@@ -32,6 +32,40 @@ else if(fcode==2)then
         pte=pte+16;
     endwhile;
     breakpoint;
+else if(fcode==4)then   //Release Block
+    alias blk R2;
+    alias pid R3;    
+    [DISK_FREE_LIST+blk]=[DISK_FREE_LIST+blk]-1;
+else if(fcode==5)then   //Get Code Page
+    alias blk R2;
+    alias i R3;
+    i=DISK_MAP_TABLE;
+    while(i<DISK_MAP_TABLE+16*10)do
+        if([i]==blk)then
+            alias page R4;
+            page=[PAGE_TABLE_BASE+20*((i-DISK_MAP_TABLE)/10)+((i-DISK_MAP_TABLE)%10)*2];
+            if(page!=-1)then
+                R0=page;
+                [MEMORY_FREE_LIST+page]=[MEMORY_FREE_LIST+page]+1;                                             
+                return;
+            endif;
+        endif;
+        i=i+1;
+    endwhile;
+    multipush(R1,R2,R3);
+    R1=1;
+    call MEMORY_MANAGER;
+    multipop(R1,R2,R3);
+    alias pg R0;
+    multipush(R0,R1,R2,R3);
+    R1=2;
+    R4=blk;
+    R2=[SYSTEM_STATUS_TABLE+1];
+    R3=pg;
+    call DEVICE_MANAGER;
+    multipop(R0,R1,R2,R3);
+endif;
+endif;
 endif;
 endif;
 return;

@@ -26,7 +26,7 @@ while(temp<INODE_TABLE+60*16)do
         [MEMORY_FREE_LIST+uPNum]=[MEMORY_FREE_LIST+uPNum]+1;
         [SYSTEM_STATUS_TABLE + 2]=[SYSTEM_STATUS_TABLE + 2]-1;
         SP=uPNum*512-1;
-        alias i R9;
+        alias i R7;
         i=uPNum*512+RESOURCE_TABLE_OFFSET;
         while(i<(uPNum+1)*512)do
             [i]=-1;
@@ -35,7 +35,7 @@ while(temp<INODE_TABLE+60*16)do
         [PROCESS_TABLE + ( [SYSTEM_STATUS_TABLE + 1] * 16) ]=0;
         [PROCESS_TABLE + ( [SYSTEM_STATUS_TABLE + 1] * 16) + 7]=ind;
         [PROCESS_TABLE + ( [SYSTEM_STATUS_TABLE + 1] * 16) + 4]=RUNNING;
-        alias pgb R7;
+        alias pgb R8;
         pgb=PAGE_TABLE_BASE+20*[SYSTEM_STATUS_TABLE + 1];
         //Library
         [pgb+0]= 63;
@@ -43,58 +43,48 @@ while(temp<INODE_TABLE+60*16)do
         [pgb+2] = 64;
         [pgb+3] = "0100";
         //Heap
-        multipush(R0,R1,R2,R3,R4,R5,R6,R7);
-        R1=1;
-        call MEMORY_MANAGER;
-        R8=R0;
-        multipop(R0,R1,R2,R3,R4,R5,R6,R7);
-        [pgb+4] = R8;
-        [pgb+5] = "0110";
-        multipush(R0,R1,R2,R3,R4,R5,R6,R7);
-        R1=1;
-        call MEMORY_MANAGER;
-        R8=R0;
-        multipop(R0,R1,R2,R3,R4,R5,R6,R7);
-        [pgb+6] = R8;
-        [pgb+7] = "0110";
+        [pgb+4] = -1;
+        [pgb+5] = "0000";
+        [pgb+6] = -1;
+        [pgb+7] = "0000";
         //Stack
-        multipush(R0,R1,R2,R3,R4,R5,R6,R7);
+        multipush(R0,R1,R2,R3,R4,R5,R6,R7,R8);
         R1=1;
         call MEMORY_MANAGER;
-        R8=R0;
-        multipop(R0,R1,R2,R3,R4,R5,R6,R7);
-        [pgb+16] = R8;
+        R9=R0;
+        multipop(R0,R1,R2,R3,R4,R5,R6,R7,R8);
+        [pgb+16] = R9;
         [pgb+17] = "0110";
-        multipush(R0,R1,R2,R3,R4,R5,R6,R7);
+        multipush(R0,R1,R2,R3,R4,R5,R6,R7,R8);
         R1=1;
         call MEMORY_MANAGER;
-        R8=R0;
-        multipop(R0,R1,R2,R3,R4,R5,R6,R7);
-        [pgb+18] = R8;
+        R9=R0;
+        multipop(R0,R1,R2,R3,R4,R5,R6,R7,R8);
+        [pgb+18] = R9;
         [pgb+19] = "0110";
         //Code
-        alias Max R8;
-        Max=[temp+2]/512+1;
+        multipush(R0,R1,R2,R3,R4,R5,R6,R7,R8);
+        R1=5;
+        R2=[INODE_TABLE+ind*16+8];
+        call MEMORY_MANAGER;
+        R9=R0;
+        multipop(R0,R1,R2,R3,R4,R5,R6,R7,R8);
+        [pgb+8] = R9;
+        [pgb+9] = "0100";
+        [pgb+10] = -1;
+        [pgb+11] = "0000";
+        [pgb+12] = -1;
+        [pgb+13] = "0000";
+        [pgb+14] = -1;
+        [pgb+15] = "0000";
         i=0;
-        while(i<Max)do
-            multipush(R0,R1,R2,R3,R4,R5,R6,R7,R8,R9);
-            R1=1;
-            call MEMORY_MANAGER;
-            R10=R0;
-            multipop(R0,R1,R2,R3,R4,R5,R6,R7,R8,R9);
-            [pgb+8+i] = R10;
-            [pgb+9+i] = "0100";
+        while(i<10)do
+            [DISK_MAP_TABLE+[SYSTEM_STATUS_TABLE+1]*10+i]=-1;
             i=i+1;
         endwhile;
         i=0;
-        while(i<Max)do
-            multipush(R0,R1,R2,R3,R4,R5,R6,R7,R8,R9);
-            R1=2;
-            R4=[temp+8+i];
-            R2=[SYSTEM_STATUS_TABLE+1];
-            R3=[pgb+8+i*2];
-            call DEVICE_MANAGER;
-            multipop(R0,R1,R2,R3,R4,R5,R6,R7,R8,R9);
+        while(i<4)do
+            [DISK_MAP_TABLE+[SYSTEM_STATUS_TABLE+1]*10+4+i]=[INODE_TABLE+ind*16+8+i];
             i=i+1;
         endwhile;
         pgb=PAGE_TABLE_BASE+20*[SYSTEM_STATUS_TABLE + 1];

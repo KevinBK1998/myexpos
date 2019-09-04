@@ -1,12 +1,12 @@
 alias fcode R1;
 alias pid R2;
-if(fcode==2)then
+if(fcode==2)then        //Free User Area Page
     multipush(R1,R2);
     R1=2;
     R2=[PROCESS_TABLE + pid * 16 + 11];
     call MEMORY_MANAGER;
     multipop(R1,R2);
-else if(fcode==3)then
+else if(fcode==3)then   //Exit Process
     multipush(R1,R2);
     R1=4;
     call PROCESS_MANAGER;
@@ -16,7 +16,7 @@ else if(fcode==3)then
     call PROCESS_MANAGER;
     multipop(R1,R2);
     [PROCESS_TABLE + pid * 16 + 4]=TERMINATED;
-else if(fcode==4)then
+else if(fcode==4)then   //Free Page Table
     alias pgte R3;
     pgte=PAGE_TABLE_BASE+20*pid;
     [pgte] = -1;
@@ -35,6 +35,36 @@ else if(fcode==4)then
         [pgte] = -1;
         [pgte+1] = "0000";
         pgte=pgte+2;
+    endwhile;
+    alias i R4;
+    i=DISK_MAP_TABLE+pid*10+2;
+    while(i<DISK_MAP_TABLE+pid*10+4)do
+        if([i]!=-1)then
+            multipush(R1,R2,R3,R4);
+            R1=4;
+            R3=pid;
+            R2=[i];
+            call MEMORY_MANAGER;
+            multipop(R1,R2,R3,R4);
+        endif;
+        i=i+1;
+    endwhile;
+    i=DISK_MAP_TABLE+pid*10+8;
+    while(i<DISK_MAP_TABLE+(pid+1)*10)do
+        if([i]!=-1)then
+            multipush(R1,R2,R3,R4);
+            R1=4;
+            R3=pid;
+            R2=[i];
+            call MEMORY_MANAGER;
+            multipop(R1,R2,R3,R4);
+        endif;
+        i=i+1;
+    endwhile;
+    i=DISK_MAP_TABLE+pid*10;
+    while(i<DISK_MAP_TABLE+(pid+1)*10)do
+        [i]=-1;
+        i=i+1;
     endwhile;
 endif;
 endif;
