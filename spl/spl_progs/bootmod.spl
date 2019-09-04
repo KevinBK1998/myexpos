@@ -14,6 +14,8 @@ loadi(4,17);    //Timer
 loadi(5,18);
 loadi(8,21);    //Console
 loadi(9,22);
+loadi(6,19);   //Disk
+loadi(7,20);
 loadi(16,29);   //Write
 loadi(17,30);
 loadi(14,27);   //Read
@@ -29,7 +31,13 @@ loadi(43,56);
 loadi(44,57);   //Memory
 loadi(45,58);
 [TERMINAL_STATUS_TABLE]=0;
+[DISK_STATUS_TABLE]=0;
 alias pte R0;
+pte=80*512+RESOURCE_TABLE_OFFSET;
+while(pte<81*512)do
+    [pte]=-1;
+    pte=pte+2;
+endwhile;
 pte=PROCESS_TABLE+ 4;
 while(pte<PROCESS_TABLE+16*16)do
     [pte]=TERMINATED;

@@ -1,5 +1,15 @@
 alias fcode R1;
 alias currPID R2;
+if(fcode==3)then        //Acquire Disk
+    if([DISK_STATUS_TABLE]==1)then
+        [PROCESS_TABLE + currPID * 16 + 4] = WAIT_DISK;
+        multipush(R1,R2);
+        call SCHEDULER;
+        multipop(R1,R2);
+    endif;
+    [DISK_STATUS_TABLE]=1;
+    [DISK_STATUS_TABLE+4]=currPID;
+else
 if(fcode==8)then        //Acquire Terminal
     if([TERMINAL_STATUS_TABLE]==1)then
         [PROCESS_TABLE + [SYSTEM_STATUS_TABLE+1] * 16 + 4] = WAIT_TERMINAL;
@@ -17,13 +27,14 @@ else if(fcode==9)then   //Release Terminal
     [TERMINAL_STATUS_TABLE]=0;
     alias pte R3;
     pte=PROCESS_TABLE;
-    while(pte<(PROCESS_TABLE +16*15+1))do
+    while(pte<(PROCESS_TABLE +16*16))do
         if([pte+4]==WAIT_TERMINAL && [pte+1]!=-1)then
             [pte+4]=READY;
         endif;
         pte=pte+16;
     endwhile;
     R0=0;
+endif;
 endif;
 endif;
 return;
