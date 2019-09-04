@@ -37,6 +37,7 @@ else if(fcode==4)then   //Release Block
     alias pid R3;    
     [DISK_FREE_LIST+blk]=[DISK_FREE_LIST+blk]-1;
 else if(fcode==5)then   //Get Code Page
+    breakpoint;
     alias blk R2;
     alias i R3;
     i=DISK_MAP_TABLE;
@@ -64,6 +65,7 @@ else if(fcode==5)then   //Get Code Page
     R3=pg;
     call DEVICE_MANAGER;
     multipop(R0,R1,R2,R3);
+    breakpoint;
 endif;
 endif;
 endif;
