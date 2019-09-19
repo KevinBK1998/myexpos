@@ -8,6 +8,8 @@ loadi(59,3);    //Inode
 loadi(60,4);
 loadi(20,33);   //Execute
 loadi(21,34);
+loadi(18,31);   //Fork
+loadi(19,32);
 loadi(2,15);    //Exception
 loadi(3,16);
 loadi(4,17);    //Timer

@@ -5,6 +5,7 @@ load --int=console $HOME/myexpos/spl/spl_progs/consoleint.xsm
 load --int=disk $HOME/myexpos/spl/spl_progs/diskint.xsm
 load --int=6 $HOME/myexpos/spl/spl_progs/intread.xsm
 load --int=7 $HOME/myexpos/spl/spl_progs/intwrite.xsm
+load --int=8 $HOME/myexpos/spl/spl_progs/intfork.xsm
 load --int=9 $HOME/myexpos/spl/spl_progs/intexec.xsm
 load --int=10 $HOME/myexpos/spl/spl_progs/intexit.xsm
 load --exhandler $HOME/myexpos/spl/spl_progs/exhandler.xsm
