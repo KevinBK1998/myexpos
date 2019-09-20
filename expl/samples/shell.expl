@@ -1,13 +1,36 @@
 int main()
 {
     decl
-        int temp;
-        str fname;
+        int temp,pid;
+        str cmd;
     enddecl
     begin
-        read(fname);
-        breakpoint;
-        temp = exposcall ( "Exec" , fname );
+        pid=-1;
+        write("Command");
+        read(cmd);
+        while(cmd!="Shutdown" AND cmd!="s")do            
+            pid = exposcall("Fork");
+            if(pid < 0) then
+                temp = exposcall("Write",-2, "Fork Failure");
+                continue;
+            endif;
+            if(pid>0)then
+                temp = exposcall ( "Wait",pid);
+                write("Command");
+                read(cmd);
+            else
+                temp = exposcall ( "Exec",cmd );
+                if(temp==-1)then
+                    write("BAD COMMAND");
+                endif;
+                break;
+            endif;
+        endwhile;
+        if(pid==0)then
+            temp = exposcall ( "Signal");
+        else
+            temp=exposcall("Shutdown");
+        endif;
         return 0;
     end
 }

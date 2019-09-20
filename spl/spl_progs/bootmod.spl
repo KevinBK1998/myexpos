@@ -4,12 +4,16 @@ loadi(65,7);    //INIT
 loadi(66,8);
 loadi(22,35);   //Exit
 loadi(23,36);
+loadi(32,45);   //Shutdown
+loadi(33,46);
 loadi(59,3);    //Inode
 loadi(60,4);
 loadi(20,33);   //Execute
 loadi(21,34);
 loadi(18,31);   //Fork
 loadi(19,32);
+loadi(24,37);   //Process Synchronisation
+loadi(25,38);
 loadi(2,15);    //Exception
 loadi(3,16);
 loadi(4,17);    //Timer
