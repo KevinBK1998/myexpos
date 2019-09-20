@@ -1,0 +1,15 @@
+int main()
+{
+    decl
+        int temp,pid;
+    enddecl
+    begin
+        pid = exposcall("Fork");
+        pid = exposcall("Fork");
+        pid = exposcall("Fork");
+        breakpoint;
+        temp = exposcall ( "Exec","pid.xsm" );
+        breakpoint;
+        return 0;
+    end
+}
