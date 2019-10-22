@@ -12,6 +12,10 @@ loadi(20,33);   //Execute
 loadi(21,34);
 loadi(18,31);   //Fork
 loadi(19,32);
+loadi(28,41);   //Semaphore 
+loadi(29,42);
+loadi(30,43);   //Semaphore Locking
+loadi(31,44);
 loadi(24,37);   //Process Synchronisation
 loadi(25,38);
 loadi(2,15);    //Exception
@@ -80,6 +84,12 @@ pte = PAGE_TABLE_BASE+20;
 [PROCESS_TABLE +16+ 15] = 10;
 [76*512] = [65*512+1];
 alias i R0;
+i=SEMAPHORE_TABLE;
+while(i<SEMAPHORE_TABLE+MAX_SEM_COUNT*4)do
+    [i]=-1;
+    [i+1]=0;
+    i=i+4;
+endwhile;
 i=DISK_MAP_TABLE+10;
 while(i<DISK_MAP_TABLE+2*10)do
     [i]=-1;

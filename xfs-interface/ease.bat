@@ -9,6 +9,8 @@ load --int=8 $HOME/myexpos/spl/spl_progs/intfork.xsm
 load --int=9 $HOME/myexpos/spl/spl_progs/intexec.xsm
 load --int=10 $HOME/myexpos/spl/spl_progs/intexit.xsm
 load --int=11 $HOME/myexpos/spl/spl_progs/int11.xsm
+load --int=13 $HOME/myexpos/spl/spl_progs/int13.xsm
+load --int=14 $HOME/myexpos/spl/spl_progs/int14.xsm
 load --int=15 $HOME/myexpos/spl/spl_progs/intshut.xsm
 load --exhandler $HOME/myexpos/spl/spl_progs/exhandler.xsm
 load --module 0 ../spl/spl_progs/resmod.xsm

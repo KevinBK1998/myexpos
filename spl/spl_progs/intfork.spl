@@ -51,11 +51,13 @@ multipop(R0,R1);
 i=PROCESS_TABLE + ( kPID * 16);
 alias j R3;
 j=PROCESS_TABLE + ( [SYSTEM_STATUS_TABLE+1] * 16) ;
+//Copy process table
 [i + 3]=[j + 3];
 [i + 6]=[j + 6];
 [i + 7]=[j + 7];
 [i + 10]=[j + 10];
 [i + 13]=[j + 13];
+//Initialise other values-process table
 [i]=0;
 [i + 2]=[SYSTEM_STATUS_TABLE+1];
 [i + 4]=CREATED;
@@ -67,8 +69,11 @@ i=[i + 11]*512+RESOURCE_TABLE_OFFSET;
 j=[j + 11]*512+RESOURCE_TABLE_OFFSET;
 while(i<([PROCESS_TABLE + ( kPID * 16) + 11]+1)*512)do
     [i]=[j];
-    i=i+1;
-    j=j+1;
+    if([i]==SEMAPHORE)then
+        [SEMAPHORE_TABLE+[i+1]*4+1]=[SEMAPHORE_TABLE+[i+1]*4+1]+1;
+    endif;
+    i=i+2;
+    j=j+2;
 endwhile;
 //Disk Map Table
 i=DISK_MAP_TABLE + [SYSTEM_STATUS_TABLE+1]*10;
