@@ -4,9 +4,13 @@ int main()
         int temp,pid;
     enddecl
     begin
+        write("Fork once");
         pid = exposcall("Fork");
+        write("Fork twice");
         pid = exposcall("Fork");
+        write("Fork thrice");
         pid = exposcall("Fork");
+        write("Execute PID");
         breakpoint;
         temp = exposcall ( "Exec","pid.xsm" );
         breakpoint;
