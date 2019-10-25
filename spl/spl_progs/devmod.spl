@@ -1,6 +1,21 @@
 alias fcode R1;
 alias currPID R2;
-if(fcode==2)then        //Disk Load
+if(fcode==1)then        //Disk Store
+    alias pg R3;
+    alias blk R4;
+    multipush(R1,R2,R3,R4);
+    R1=3;
+    call RESOURCE_MANAGER;
+    multipop(R1,R2,R3,R4);
+    [DISK_STATUS_TABLE+1]=1;
+    [DISK_STATUS_TABLE+2]=pg;
+    [DISK_STATUS_TABLE+3]=blk;
+    store(pg,blk);
+    [PROCESS_TABLE+currPID*16+4]=WAIT_DISK;
+    multipush(R1,R2,R3,R4);
+    call SCHEDULER;
+    multipop(R1,R2,R3,R4);
+else if(fcode==2)then   //Disk Load
     alias pg R3;
     alias blk R4;
     multipush(R1,R2,R3,R4);
@@ -40,6 +55,7 @@ else if(fcode==4)then   //Terminal Read
     alias pAdd R4;
     pAdd=[PTBR + 2 * (addr)/ 512] * 512 + (addr) % 512;
     [pAdd]=[PROCESS_TABLE + [SYSTEM_STATUS_TABLE+1] * 16 + 8];
+endif;
 endif;
 endif;
 endif;

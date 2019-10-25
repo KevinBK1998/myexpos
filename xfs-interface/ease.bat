@@ -3,6 +3,7 @@ load --os $HOME/myexpos/spl/spl_progs/os.xsm
 load --int=timer $HOME/myexpos/spl/spl_progs/timerint.xsm
 load --int=console $HOME/myexpos/spl/spl_progs/consoleint.xsm
 load --int=disk $HOME/myexpos/spl/spl_progs/diskint.xsm
+load --int=4 $HOME/myexpos/spl/spl_progs/int4.xsm
 load --int=6 $HOME/myexpos/spl/spl_progs/intread.xsm
 load --int=7 $HOME/myexpos/spl/spl_progs/intwrite.xsm
 load --int=8 $HOME/myexpos/spl/spl_progs/intfork.xsm
