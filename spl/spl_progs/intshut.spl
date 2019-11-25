@@ -15,22 +15,22 @@ breakpoint;
 multipush(R0,R1);
 R1=1;
 R2=[SYSTEM_STATUS_TABLE + 1];
-R3=61;
+R3=61;      //Disk Free List
 R4=2;
 call DEVICE_MANAGER;
 R1=1;
 R2=[SYSTEM_STATUS_TABLE + 1];
-R3=59;
+R3=59;      //Inode Table
 R4=3;
 call DEVICE_MANAGER;
 R1=1;
 R2=[SYSTEM_STATUS_TABLE + 1];
-R3=60;
+R3=60;      //User Table
 R4=4;
 call DEVICE_MANAGER;
 R1=1;
 R2=[SYSTEM_STATUS_TABLE + 1];
-R3=62;
+R3=62;      //Root File
 R4=5;
 call DEVICE_MANAGER;
 multipop(R0,R1);

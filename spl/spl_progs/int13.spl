@@ -35,7 +35,13 @@ else if(fcode==18)then  //Semrelease
     id=[[PTBR + 2 * (userSP - 4)/ 512] * 512 + (userSP - 4) % 512];
     alias i R4;
     i=[PROCESS_TABLE + ( [SYSTEM_STATUS_TABLE + 1] * 16) + 11]*512+RESOURCE_TABLE_OFFSET+id*2;
-    if(id>7||id<0||[i]!=SEMAPHORE)then
+    if(id>7||id<0)then
+        [rAdd]=-1;
+        SP=userSP;
+        [PROCESS_TABLE + ( [SYSTEM_STATUS_TABLE + 1] * 16) + 9]=0;
+        ireturn;
+    endif;
+    if([i]!=SEMAPHORE)then
         [rAdd]=-1;
         SP=userSP;
         [PROCESS_TABLE + ( [SYSTEM_STATUS_TABLE + 1] * 16) + 9]=0;

@@ -41,6 +41,10 @@ loadi(48,61);   //Device
 loadi(49,62);
 loadi(42,55);   //Process
 loadi(43,56);
+loadi(12,25);   //File Opening
+loadi(13,26);
+loadi(46,59);   //File manager
+loadi(47,60);
 loadi(44,57);   //Memory
 loadi(45,58);
 loadi(61,2);    //Disk Free List
@@ -106,6 +110,12 @@ i=FILE_STATUS_TABLE;
 while(i<FILE_STATUS_TABLE+4*MAX_FILE_NUM)do
     [i]=-1;
     [i+1]=-1;
+    i=i+4;
+endwhile;
+i=OPEN_FILE_TABLE;
+while(i<OPEN_FILE_TABLE+4*MAX_OPENFILE_NUM)do
+    [i]=-1;
+    [i+1]=0;
     i=i+4;
 endwhile;
 i=BUFFER_TABLE;

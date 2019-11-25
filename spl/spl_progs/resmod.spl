@@ -1,17 +1,42 @@
 alias fcode R1;
-alias currPID R2;
-if(fcode==3)then        //Acquire Disk
+alias currPID R3;
+if(fcode==1)then        //Acquire Buffer
+    alias bno R2;
+    while([BUFFER_TABLE+bno*4+3]!=-1)do
+        [PROCESS_TABLE + currPID * 16 + 4] = WAIT_BUFFER;
+        [PROCESS_TABLE + currPID * 16 + 5] = bno;
+        multipush(R1,R2,R3);
+        call SCHEDULER;
+        multipop(R1,R2,R3);
+    endwhile;
+    [BUFFER_TABLE+bno*4+3]=currPID;
+else if(fcode==2)then   //Release Buffer
+    alias bno R2;
+    if([BUFFER_TABLE+bno*4+3]!=currPID)then
+        R0=-1;
+        return;
+    endif;
+    [BUFFER_TABLE+bno*4+3]=-1;
+    alias pte R4;
+    pte=PROCESS_TABLE;
+    while(pte<(PROCESS_TABLE +16*16))do
+        if([pte+4]==WAIT_BUFFER && [pte+5]==bno)then
+            [pte+4]=READY;
+        endif;
+        pte=pte+16;
+    endwhile;
+else if(fcode==3)then        //Acquire Disk
+    alias PID R2; 
     if([DISK_STATUS_TABLE]==1)then
-        [PROCESS_TABLE + currPID * 16 + 4] = WAIT_DISK;
+        [PROCESS_TABLE + PID * 16 + 4] = WAIT_DISK;
         multipush(R1,R2);
         call SCHEDULER;
         multipop(R1,R2);
     endif;
     [DISK_STATUS_TABLE]=1;
-    [DISK_STATUS_TABLE+4]=currPID;
+    [DISK_STATUS_TABLE+4]=PID;
 else if(fcode==4)then   //Acquire Inode
     alias ind R2;
-    alias pid R3;
     while([FILE_STATUS_TABLE+ind*4]!=-1)do
         [PROCESS_TABLE + [SYSTEM_STATUS_TABLE+1] * 16 + 4] = WAIT_FILE;
         [PROCESS_TABLE + [SYSTEM_STATUS_TABLE+1] * 16 + 5] = ind;
@@ -23,12 +48,11 @@ else if(fcode==4)then   //Acquire Inode
         R0=-1;
         return;
     endif;
-    [FILE_STATUS_TABLE+ind*4]=pid;
+    [FILE_STATUS_TABLE+ind*4]=currPID;
     R0=0;
 else if(fcode==5)then   //Release Inode
     alias ind R2;
-    alias pid R3;
-    if([FILE_STATUS_TABLE+ind*4]!=pid)then
+    if([FILE_STATUS_TABLE+ind*4]!=currPID)then
         R0=-1;
         return;
     endif;
@@ -57,8 +81,7 @@ else if(fcode==6)then        //Acquire Semaphore
     endwhile;
 else if(fcode==7)then        //Release Semaphore
     alias sid R2;
-    alias pid R3;
-    if([SEMAPHORE_TABLE+sid*4]==pid)then
+    if([SEMAPHORE_TABLE+sid*4]==currPID)then
         [SEMAPHORE_TABLE+sid*4]=-1;
         alias pte R4;
         pte=PROCESS_TABLE;
@@ -71,6 +94,7 @@ else if(fcode==7)then        //Release Semaphore
     endif;
     [SEMAPHORE_TABLE+sid*4+1]=[SEMAPHORE_TABLE+sid*4+1]-1;
 else if(fcode==8)then        //Acquire Terminal
+    alias PID R2; 
     if([TERMINAL_STATUS_TABLE]==1)then
         [PROCESS_TABLE + [SYSTEM_STATUS_TABLE+1] * 16 + 4] = WAIT_TERMINAL;
         multipush(R1,R2);
@@ -78,9 +102,10 @@ else if(fcode==8)then        //Acquire Terminal
         multipop(R1,R2);
     endif;
     [TERMINAL_STATUS_TABLE]=1;
-    [TERMINAL_STATUS_TABLE+1]=currPID;
+    [TERMINAL_STATUS_TABLE+1]=PID;
 else if(fcode==9)then       //Release Terminal
-    if(currPID!=[TERMINAL_STATUS_TABLE+1])then
+    alias PID R2; 
+    if(PID!=[TERMINAL_STATUS_TABLE+1])then
         R0=-1;
         return;
     endif;
@@ -94,6 +119,8 @@ else if(fcode==9)then       //Release Terminal
         pte=pte+16;
     endwhile;
     R0=0;
+endif;
+endif;
 endif;
 endif;
 endif;
