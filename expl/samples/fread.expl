@@ -1,0 +1,27 @@
+int main()
+{
+    decl
+        int fid,t;
+        str fname,p;
+    enddecl
+    begin
+        write("File Name");
+        breakpoint;
+        read(fname);
+        write("File Name");
+        fid = exposcall ( "Open" , fname );
+        write("File Name");
+        if(fid<0)then
+            write("Error in Open");
+        else
+            t=0;
+            write("File Name");
+            while(t==0)do
+                t=exposcall("Read",fid,p);
+                write(p);
+            endwhile;
+            t = exposcall ( "Close" ,fid);
+        endif;
+        return 0;
+    end
+}

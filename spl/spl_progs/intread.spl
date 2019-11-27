@@ -9,7 +9,9 @@ alias rAdd R3;
 fDesc=[[PTBR + 2 * (userSP - 4)/ 512] * 512 + (userSP - 4) % 512];
 Add=[[PTBR + 2 * (userSP - 3)/ 512] * 512 + (userSP - 3) % 512];
 rAdd = ([PTBR + 2 * ((userSP - 1)/ 512)] * 512) + (userSP - 1) % 512;
+print "Read";
 if(fDesc==-1)then    //call Terminal Read
+    print "Terminal Read";
     multipush(R0,R1,R2);
     R1=4;
     R3=Add;
@@ -18,6 +20,7 @@ if(fDesc==-1)then    //call Terminal Read
     multipop(R0,R1,R2);
     [rAdd]=0;
 else        //call Buffered Read
+    print "Buffered Read";
     if(fDesc>7||fDesc<0)then
         [rAdd]=-1;
         SP=userSP;

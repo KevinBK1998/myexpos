@@ -22,4 +22,6 @@ load --module 3 ../spl/spl_progs/filemod.xsm
 load --module 4 ../spl/spl_progs/devmod.xsm
 load --module 5 ../spl/spl_progs/schedmod.xsm
 load --module 7 ../spl/spl_progs/bootmod.xsm
+rm fread.xsm
+load --exec /home/kevinbk/myexpos/expl/samples/fread.xsm
 exit
