@@ -2,21 +2,21 @@ alias fcode R1;
 alias currPID R3;
 if(fcode==1)then        //Acquire Buffer
     alias bno R2;
-    while([BUFFER_TABLE+bno*4+3]!=-1)do
+    while([BUFFER_TABLE+bno*4+2]!=-1)do
         [PROCESS_TABLE + currPID * 16 + 4] = WAIT_BUFFER;
         [PROCESS_TABLE + currPID * 16 + 5] = bno;
         multipush(R1,R2,R3);
         call SCHEDULER;
         multipop(R1,R2,R3);
     endwhile;
-    [BUFFER_TABLE+bno*4+3]=currPID;
+    [BUFFER_TABLE+bno*4+2]=currPID;
 else if(fcode==2)then   //Release Buffer
     alias bno R2;
-    if([BUFFER_TABLE+bno*4+3]!=currPID)then
+    if([BUFFER_TABLE+bno*4+2]!=currPID)then
         R0=-1;
         return;
     endif;
-    [BUFFER_TABLE+bno*4+3]=-1;
+    [BUFFER_TABLE+bno*4+2]=-1;
     alias pte R4;
     pte=PROCESS_TABLE;
     while(pte<(PROCESS_TABLE +16*16))do

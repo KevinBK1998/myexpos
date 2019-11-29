@@ -143,8 +143,6 @@ while(i<MEMORY_FREE_LIST+128)do
     endif;
     i=i+1;
 endwhile;
-
 [SYSTEM_STATUS_TABLE+2]=freeno;
-breakpoint;
 [SYSTEM_STATUS_TABLE+3]=0;
 return;
