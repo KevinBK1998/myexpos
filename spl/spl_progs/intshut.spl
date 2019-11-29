@@ -11,6 +11,29 @@ if([SYSTEM_STATUS_TABLE+1]!=1||[PROCESS_TABLE+[SYSTEM_STATUS_TABLE+1]*16+3]!=1)t
     [PROCESS_TABLE + ( [SYSTEM_STATUS_TABLE + 1] * 16) + 9]=0;
     ireturn;
 endif;
+multipush(R0,R1);
+R1=5;
+R2=[SYSTEM_STATUS_TABLE+1];
+call PROCESS_MANAGER;
+multipop(R0,R1);
+alias i R2;
+alias bno R3;
+bno=0;
+i=BUFFER_TABLE;
+while(i<BUFFER_TABLE+4*MAX_BUFFER)do
+    if([i+1]==1)then
+        multipush(R0,R1,R2,R3);
+        R1=1;
+        R2=[SYSTEM_STATUS_TABLE+1];
+        R3=71+bno;
+        R4=[i];
+        call DEVICE_MANAGER;
+        multipop(R0,R1,R2,R3,R4,R5);
+        [i+1]=0;
+    endif;
+    i=i+4;
+    bno=bno+1;
+endwhile;
 breakpoint;
 multipush(R0,R1);
 R1=1;
