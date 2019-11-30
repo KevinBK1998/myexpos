@@ -112,14 +112,15 @@ else if(fcode==3)then   //Open
             call RESOURCE_MANAGER;
             R5=R0;
             multipop(R0,R1,R2,R3,R4,R5);
-            R0=oft;
+            R0=(oft-OPEN_FILE_TABLE)/4;
             break;
         endif;
         temp=temp+16;
     endwhile;  
 else if(fcode==4)then   //Close
-    alias oft R2;
-    alias ind R3;
+    alias oft R3;
+    oft=OPEN_FILE_TABLE+R2*4;
+    alias ind R4;
     ind=[oft];
     [oft+1]=[oft+1]-1;
     if([oft+1]==0)then

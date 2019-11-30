@@ -5,6 +5,7 @@ int main()
         str cmd;
     enddecl
     begin
+        write("cmd");
         read(cmd);
         while(cmd!="Shutdown" AND cmd!= "s")do
             temp=exposcall("Fork");
@@ -22,6 +23,7 @@ int main()
                 write("Fork Failed");
             endif;
             endif;
+            write("cmd");
             read(cmd);
         endwhile;
         if(cmd=="Shutdown" OR cmd=="s")then

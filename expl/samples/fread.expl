@@ -11,7 +11,7 @@ int main()
         if(fid<0)then
             write("Error in Open");
         else
-            write("File Contents-");
+            write("File Contents");
             t=exposcall("Read",fid,p);
             while(t==0)do
                 write(p);
