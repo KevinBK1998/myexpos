@@ -1,7 +1,7 @@
 alias fcode R1;
 alias blk R2;
 alias off R3;
-if(fcode==1)then        //Buffered Write
+if(fcode==1||fcode==2)then        //Buffered Write or Read
     alias wrd R4;
     alias bno R5;
     bno=blk%4;
@@ -11,7 +11,7 @@ if(fcode==1)then        //Buffered Write
     R3=[SYSTEM_STATUS_TABLE+1];
     call RESOURCE_MANAGER;
     multipop(R0,R1,R2,R3,R4,R5);
-    if([BUFFER_TABLE+bno*4]!=blk&&[BUFFER_TABLE+bno*4]!=-1)then
+    if([BUFFER_TABLE+bno*4]!=blk)then
         if([BUFFER_TABLE+bno*4+1]==1)then
             multipush(R0,R1,R2,R3,R4,R5);
             R1=1;
@@ -24,51 +24,18 @@ if(fcode==1)then        //Buffered Write
         endif;
         multipush(R0,R1,R2,R3,R4,R5);
         R1=2;
+        R4=blk;
         R2=[SYSTEM_STATUS_TABLE+1];
         R3=71+bno;
-        R4=blk;
         call DEVICE_MANAGER;
         multipop(R0,R1,R2,R3,R4,R5);
         [BUFFER_TABLE+bno*4]=blk;
     endif;
-    [(71+bno)*512+off]=wrd;
-    multipush(R0,R1,R2,R3,R4,R5);
-    R1=2;
-    R2=bno;
-    R3=[SYSTEM_STATUS_TABLE+1];
-    call RESOURCE_MANAGER;
-    multipop(R0,R1,R2,R3,R4,R5);
-else if(fcode==2)then   //Buffered Read
-    alias Add R4;
-    alias bno R5;
-    bno=blk%4;
-    multipush(R0,R1,R2,R3,R4,R5);
-    R1=1;
-    R2=bno;
-    R3=[SYSTEM_STATUS_TABLE+1];
-    call RESOURCE_MANAGER;
-    multipop(R0,R1,R2,R3,R4,R5);
-    if([BUFFER_TABLE+bno*4]!=blk&&[BUFFER_TABLE+bno*4]!=-1)then
-        if([BUFFER_TABLE+bno*4+1]==1)then
-            multipush(R0,R1,R2,R3,R4,R5);
-            R1=1;
-            R2=[SYSTEM_STATUS_TABLE+1];
-            R3=71+bno;
-            R4=[BUFFER_TABLE+bno*4];
-            call DEVICE_MANAGER;
-            multipop(R0,R1,R2,R3,R4,R5);
-            [BUFFER_TABLE+bno*4+1]=0;
-        endif;
-        multipush(R0,R1,R2,R3,R4,R5);
-        R1=2;
-        R2=[SYSTEM_STATUS_TABLE+1];
-        R3=71+bno;
-        R4=blk;
-        call DEVICE_MANAGER;
-        multipop(R0,R1,R2,R3,R4,R5);
-        [BUFFER_TABLE+bno*4]=blk;
+    if(fcode==1)then
+        [(71+bno)*512+off]=wrd;
+    else
+        [wrd]=[(71+bno)*512+off];
     endif;
-    [Add]=[(71+bno)*512+off];
     multipush(R0,R1,R2,R3,R4,R5);
     R1=2;
     R2=bno;
@@ -133,8 +100,8 @@ else if(fcode==3)then   //Open
                     [FILE_STATUS_TABLE+4*ind+1]=1;
                 else
                     [FILE_STATUS_TABLE+4*ind+1]=[FILE_STATUS_TABLE+4*ind+1]+1;
-                    [oft]=ind;
                 endif;
+                [oft]=ind;
             endif;
             [oft+1]=1;
             [oft+2]=0;
@@ -145,14 +112,15 @@ else if(fcode==3)then   //Open
             call RESOURCE_MANAGER;
             R5=R0;
             multipop(R0,R1,R2,R3,R4,R5);
-            R0=oft;
+            R0=(oft-OPEN_FILE_TABLE)/4;
             break;
         endif;
         temp=temp+16;
     endwhile;  
 else if(fcode==4)then   //Close
-    alias oft R2;
-    alias ind R3;
+    alias oft R3;
+    oft=OPEN_FILE_TABLE+R2*4;
+    alias ind R4;
     ind=[oft];
     [oft+1]=[oft+1]-1;
     if([oft+1]==0)then
@@ -166,7 +134,6 @@ else if(fcode==4)then   //Close
             [FILE_STATUS_TABLE+ind*4+1]=-1;
         endif;
     endif;
-endif;
 endif;
 endif;
 endif;

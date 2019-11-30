@@ -6,19 +6,16 @@ int main()
     enddecl
     begin
         write("File Name");
-        breakpoint;
         read(fname);
-        write("File Name");
         fid = exposcall ( "Open" , fname );
-        write("File Name");
         if(fid<0)then
             write("Error in Open");
         else
-            t=0;
-            write("File Name");
+            write("File Contents");
+            t=exposcall("Read",fid,p);
             while(t==0)do
-                t=exposcall("Read",fid,p);
                 write(p);
+                t=exposcall("Read",fid,p);
             endwhile;
             t = exposcall ( "Close" ,fid);
         endif;
