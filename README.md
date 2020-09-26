@@ -1,3 +1,2 @@
-# myexpos
-eXpOS OS Design Lab Files - 
-# an attempt by Kevin Bijoy Kurian
+## eXpOS - OS Lab 
+an attempt by Kevin Bijoy Kurian
